@@ -25,7 +25,7 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final SignUpService _signUpService = SignUpService();
-
+  bool registering = false;
   @override
   void dispose() {
     _fnameController.dispose();
@@ -79,12 +79,6 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: 'Password',
             obscureText: true,
           ),
-          // const SizedBox(height: 26),
-          // CustomTextFormField(
-          //   controller: _confirmPasswordController,
-          //   hintText: 'Confirm Password',
-          //   obscureText: true,
-          // ),
           const SizedBox(height: 26),
           Text(
             'By creating an account, you agree to the Terms and Use and Privicy Policy',
@@ -95,28 +89,31 @@ class _SignUpFormState extends State<SignUpForm> {
             ),
           ),
           const SizedBox(height: 26),
-          CustomButton(
-            buttonName: 'Register',
-            onPressed: () {
-              if (_signUpFomKey.currentState!.validate()) {
-                signUp();
-                // if (_passwordController.text ==
-                //     _confirmPasswordController.text) {
-                //   signUp();
-                // } else {
-                //   CustomSnackBar.showSnackBar(
-                //     context: context,
-                //     text: 'Password and Confirm Password does not match',
-                //   );
-                // }
-              }
-            },
-          ),
+          registering
+              ? const CircularProgressIndicator()
+              : CustomButton(
+                  buttonName: 'Register',
+                  onPressed: () async {
+                    if (_signUpFomKey.currentState!.validate()) {
+                      // signUp();
+                      registering = true;
+                      await _signUpService.signUpUser(
+                        context: context,
+                        firstName: _fnameController.text,
+                        middleName: _mnameController.text,
+                        lastName: _lnameController.text,
+                        username: _usernameController.text,
+                        password: _passwordController.text,
+                      );
+                      registering = false;
+                    }
+                  },
+                ),
           const SizedBox(height: 26),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Already have an account?'),
+              const Text('Already have an account?'),
               CustomTextButton(
                   buttonName: 'Login',
                   onPressed: () {

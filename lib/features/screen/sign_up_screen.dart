@@ -13,8 +13,8 @@ class SignUpScreen extends StatelessWidget {
         title: Text('Register'),
         centerTitle: true,
       ),
-      body: SafeArea(
-          child: const SingleChildScrollView(
+      body: const SafeArea(
+          child: SingleChildScrollView(
         child: SignUpBody(),
       )),
     );

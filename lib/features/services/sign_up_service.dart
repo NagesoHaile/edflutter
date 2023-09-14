@@ -5,6 +5,7 @@ import 'package:edir/core/models/user.dart';
 import 'package:edir/core/widgets/custom_snack_bar.dart';
 import 'package:edir/core/constants/global_url.dart';
 import 'package:edir/core/errors/http_error_handling.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpService {
   Future<void> signUpUser({
@@ -44,13 +45,7 @@ class SignUpService {
           print('Error message: ${responseData['error_message']}');
         }
       }
-      // Response response = await post(
-      //   uri,
-      //   body: user.toJson(),
-      //   headers: <String, String>{
-      //     'Content-Type': 'application/json; charset=UTF-8',
-      //   },
-      // );
+
       HttpErrorHandling.handleHttpError(
           context: context,
           response: response,
@@ -59,6 +54,8 @@ class SignUpService {
               context: context,
               text: 'User Register sucessfully. Login with the same credential',
             );
+            final prefs = await SharedPreferences.getInstance();
+            final registered = prefs.setBool('registered', true);
           });
     } catch (error) {
       CustomSnackBar.showSnackBar(
